@@ -5,14 +5,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class InsultGenerator {
+public class Test01 {
 	public String generateInsult() {
 		String vowels = "AEIOU";
 		String article = "an";
 		String theInsult = "";
-		
+		String databaseURL = "";
 		try {
-			String databaseURL = "jdbc:mysql://";
+			databaseURL += "jdbc:mysql://";
 			databaseURL += System.getenv("MARIADB_DB_HOST");
 			databaseURL += "/" + System.getenv("MYSQL_DATABASE");
 
