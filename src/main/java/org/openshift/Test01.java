@@ -1,19 +1,42 @@
 package org.openshift;
 
-import java.util.Random;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
-public class Test01 {
-    public String generateWords() {
-        String words[][] = { { "A", "B", "C" }, { "D", "E", "F" },
-                { "H", "I", "J" } };
-        String vowels = "AEIOU";
-        String article = "an";
-        String firstAdjective = words[0][new Random().nextInt(words[0].length)];
-        String secondAdjective = words[1][new Random().nextInt(words[1].length)];
-        String noun = words[2][new Random().nextInt(words[2].length)];
-        if (vowels.indexOf(firstAdjective.charAt(0)) == -1) {
-            article = "a";
-        }
-        return String.format("Thou art %s %s %s %s!", article, firstAdjective, secondAdjective, noun);
-    }
+public class InsultGenerator {
+	public String generateInsult() {
+		String vowels = "AEIOU";
+		String article = "an";
+		String theInsult = "";
+		
+		try {
+			String databaseURL = "jdbc:mysql://";
+			databaseURL += System.getenv("MARIADB_DB_HOST");
+			databaseURL += "/" + System.getenv("MYSQL_DATABASE");
+
+			String username = System.getenv("MYSQL_USER");
+			String password = System.getenv("MYSQL_PASSWORD");
+			Connection connection = DriverManager.getConnection(databaseURL, username, password);
+
+			if (connection != null) {
+				String SQL = "select a.string AS first, b.string AS second, c.string AS noun from short_adjective a , long_adjective b, noun c ORDER BY rand() limit 1";
+				Statement stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery(SQL);
+				while (rs.next()) {
+					if (vowels.indexOf(rs.getString("first").charAt(0)) == -1) {
+						article = "a";
+					}
+					theInsult =  String.format("Thou art %s %s %s %s!", article, rs.getString("first"),
+							rs.getString("second"), rs.getString("noun"));
+				}
+				rs.close();
+				connection.close();
+			}
+		} catch (Exception e) {
+			return "Database connection problem!. " + databaseURL;
+		}
+		return theInsult;
+	}
 }

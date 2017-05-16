@@ -2,11 +2,9 @@ DROP TABLE IF EXISTS short_adjective;
 DROP TABLE IF EXISTS long_adjective;
 DROP TABLE IF EXISTS noun;
 
-BEGIN;
-
-CREATE TABLE short_adjective (id serial PRIMARY KEY, string varchar);
-CREATE TABLE long_adjective (id serial PRIMARY KEY, string varchar);
-CREATE TABLE noun (id serial PRIMARY KEY, string varchar);
+CREATE TABLE short_adjective (id MEDIUMINT NOT NULL AUTO_INCREMENT, string varchar(255), PRIMARY KEY(id));
+CREATE TABLE long_adjective (id MEDIUMINT NOT NULL AUTO_INCREMENT, string varchar(255), PRIMARY KEY(id));
+CREATE TABLE noun (id MEDIUMINT NOT NULL AUTO_INCREMENT, string varchar(255), PRIMARY KEY(id));
 
 INSERT INTO short_adjective (string) VALUES ('AA');
 INSERT INTO short_adjective (string) VALUES ('AB');
